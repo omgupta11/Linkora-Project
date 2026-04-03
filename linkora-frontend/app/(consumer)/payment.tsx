@@ -1,11 +1,12 @@
 import React from "react";
-import { useRouter } from "expo-router";
 import { View, Text, Pressable, StyleSheet, Alert } from "react-native";
 import * as Linking from "expo-linking";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 
 export default function PaymentScreen() {
-  // ✅ FIX: proper typing + fallback
+  const router = useRouter();
+
+  // ✅ safe params handling
   const params = useLocalSearchParams();
   const amount = Number(params.amount) || 0;
 
@@ -25,11 +26,9 @@ export default function PaymentScreen() {
     });
   };
 
-  const router = useRouter(); // add this at top
-
-const confirmPayment = () => {
-  router.replace("/payment-success");
-};
+  const confirmPayment = () => {
+    router.replace("/payment-success");
+  };
 
   return (
     <View style={styles.container}>
