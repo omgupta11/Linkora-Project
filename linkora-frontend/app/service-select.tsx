@@ -1,5 +1,4 @@
-// app/service-select.tsx
-
+import { useRouter } from "expo-router";
 import {
   View,
   Text,
@@ -9,7 +8,6 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
@@ -24,7 +22,7 @@ const SERVICES = [
 
 export default function ServiceSelect() {
   const router = useRouter();
-  const selected = useSharedValue<string>("");
+  const selected = useSharedValue("");
 
   const total =
     SERVICES.find((s) => s.id === selected.value)?.price || 0;
@@ -64,7 +62,12 @@ export default function ServiceSelect() {
             !selected.value && { opacity: 0.5 },
           ]}
           disabled={!selected.value}
-          onPress={() => router.push("/payment")}
+          onPress={() =>
+            router.push({
+              pathname: "/payment",
+              params: { amount: total }, // 🔥 FIXED
+            })
+          }
         >
           <Text style={styles.payText}>Continue to Pay</Text>
         </Pressable>
@@ -73,13 +76,7 @@ export default function ServiceSelect() {
   );
 }
 
-function ServiceCard({
-  item,
-  selected,
-}: {
-  item: any;
-  selected: { value: string };
-}) {
+function ServiceCard({ item, selected }: any) {
   const scale = useSharedValue(1);
 
   const animatedStyle = useAnimatedStyle(() => ({
